@@ -9,6 +9,7 @@ def get_price_data(query):
 	data = []
 	index = []
 	basetime = 0
+	interval = int(query.get('i', 86400))
 	for price in lines:
 		cols = price.split(",")
 		if cols[0][0] == 'a':
@@ -16,7 +17,7 @@ def get_price_data(query):
 			index.append(datetime.fromtimestamp(basetime))
 			data.append([float(cols[4]), float(cols[2]), float(cols[3]), float(cols[1]), int(cols[5])])
 		elif cols[0][0].isdigit():
-			date = basetime + (int(cols[0])*int(query['i']))
+			date = basetime + (int(cols[0])*interval)
 			index.append(datetime.fromtimestamp(date))
 			data.append([float(cols[4]), float(cols[2]), float(cols[3]), float(cols[1]), int(cols[5])])
 	return pd.DataFrame(data, index = index, columns = ['Open', 'High', 'Low', 'Close', 'Volume'])
